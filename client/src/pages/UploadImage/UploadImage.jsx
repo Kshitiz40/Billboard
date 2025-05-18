@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FileUploader from "../../components/FileUploader";
 import Button from "../../components/Button";
 import { useNotification } from "../../context/NotificationContext";
@@ -7,6 +7,7 @@ import axios from "axios";
 import Error from "../../components/Error";
 import Sidebar from "../../components/Sidebar";
 import { uploadImageToCloudinary } from './../../config/uploadToCloudinary';
+import apibaseurl from '../../apiConfig/api';
 
 const UploadImage = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,26 @@ const UploadImage = () => {
   const [step2Billboard, setStep2Billboard] = useState("");
   const [step2SegmentedBillboard, setStep2SegmentedBillboard] = useState("");
   const [billboardId, setBillboardId] = useState("");
+  const image = sessionStorage.getItem("downloadedImage");
+  const billboardIdFromSession = sessionStorage.getItem("billboardId");
+  const billboardImageFromSession = sessionStorage.getItem("billboardImage");
+
+
+  // Retrieve the image from sessionStorage
+  useEffect(() => {
+    if (image && billboardIdFromSession && billboardImageFromSession) {
+      setBillboardId(billboardIdFromSession)
+      setStep2Billboard(billboardImageFromSession)
+      setBanner(image);
+      setCurrentStep(3);
+    }
+    return () => {
+      sessionStorage.removeItem("billboardId");
+      sessionStorage.removeItem("billboardImage");
+      sessionStorage.removeItem("downloadedImage");
+    };
+  }, [image]);
+
 
 
   const fetchData = async () => {
@@ -37,7 +58,7 @@ const UploadImage = () => {
         const billboardURL = await uploadImageToCloudinary(billboard);
 
         const response = await axios.post(
-          `http://localhost:5000/user/process-billboard`,
+          `${apibaseurl}user/process-billboard`,
           {
             billboardImage: billboardURL,
             title,
@@ -54,6 +75,8 @@ const UploadImage = () => {
             setBillboardId(response.data.id);
             setStep2Billboard(response.data.billboardImage);
             setStep2SegmentedBillboard(response.data.segmentedImage);
+            sessionStorage.setItem("billboardId", response.data.id);
+            sessionStorage.setItem("billboardImage", response.data.billboardImage);
           }
           setCurrentStep(2);
           setLoading(false);
@@ -65,9 +88,11 @@ const UploadImage = () => {
           return;
         }
         const bannerURL = await uploadImageToCloudinary(banner);
-
+        console.log(bannerURL);
+        console.log(billboardId);
+        console.log(step2Billboard)
         const response = await axios.post(
-          `http://localhost:5000/user/process-banner`,
+          `${apibaseurl}user/process-banner`,
           {
             campaignId: billboardId,
             billboardImage: step2Billboard,
@@ -80,8 +105,13 @@ const UploadImage = () => {
 
         if (response.status === 201) {
           setError(false);
-        
+          // Store the image in sessionStorage
           if (response.data) {
+            if (image) {
+              sessionStorage.removeItem("downloadedImage");
+              sessionStorage.removeItem("billboardId");
+              sessionStorage.removeItem("billboardImage");
+            }
             navigate('/success', { state: { finalBillboard: response.data.processedImage, billboardId } });
           }
         }
@@ -170,24 +200,24 @@ const UploadImage = () => {
                   </p>
                   <FileUploader label="Choose Billboard Image" onFileChange={(file) => { setBillboard(file) }} />
                   <div
-                  className="mt-3"
+                    className="mt-3"
                   >
-                  <input
-                    type="text"
-                    id="title"
-                    placeholder="Title"
-                    className="w-full p-2 mb-6 text-base text-gray-900 bg-[#F7F2FA] rounded-lg  border-b border-[#6750A4] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <input
-                    type="description"
-                    id="description"
-                    placeholder="Description"
-                    className="w-full p-2 mb-6 text-base text-gray-900 bg-[#F7F2FA] rounded-lg  border-b border-[#6750A4] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
+                    <input
+                      type="text"
+                      id="title"
+                      placeholder="Title"
+                      className="w-full p-2 mb-6 text-base text-gray-900 bg-[#F7F2FA] rounded-lg  border-b border-[#6750A4] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <input
+                      type="description"
+                      id="description"
+                      placeholder="Description"
+                      className="w-full p-2 mb-6 text-base text-gray-900 bg-[#F7F2FA] rounded-lg  border-b border-[#6750A4] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
                   </div>
                   <Button label={loading ? "Processing..." : "Process with AI"} onClick={handleStepOne}
                     className={`mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow ${loading
@@ -233,18 +263,21 @@ const UploadImage = () => {
                     Select the banner image you want to place on the billboard.
                     Once uploaded, you can proceed to process it with AI.
                   </p>
-                   <p className="text-gray-800 text-center text-xl">Choose Banner Image </p>
+                  <p className="text-gray-800 text-center text-xl">Choose Banner Image </p>
                   <div className="w-full flex justify-center items-end gap-3">
                     <FileUploader
                       label=""
                       onFileChange={(file) => setBanner(file)}
+                      bannerUploaded={banner}
                     />
-                    <button
-                      className={`mt-4 px-1 min-w-[150px] h-14 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                      onClick={() => navigate('/create-banner')}
-                    >
-                      Create Banner
-                    </button>
+                    <a href={`/create?billboardId=${billboardId}`}>
+                      <button
+                        className={`mt-4 px-1 min-w-[150px] h-14 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                      // onClick={() => navigate('/create')}
+                      >
+                        Create Banner
+                      </button>
+                    </a>
                   </div>
                   <Button
                     label={loading ? "Just a moment, Processing..." : "Process with AI"}
@@ -261,7 +294,7 @@ const UploadImage = () => {
             </div>
           )}
         </main>
-        {/* <img src={finalImage} alt="" /> */}
+        {/* <img src={banner} alt="" /> */}
       </div>
     </>
   );

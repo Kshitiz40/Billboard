@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import showNotification from '../../components/PopupNotification';
 import axios from "axios";
-import apibaseurl from './../../apiConfig/api';
+import apibaseurl from '../../apiConfig/api';
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const LogIn = () => {
     if (email && password) {
       try{
         const response = await axios.post(
-          `http://localhost:5000/user/login`,
+          `${apibaseurl}user/login`,
           {email,password},
           {
             withCredentials : true,

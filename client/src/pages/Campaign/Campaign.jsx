@@ -45,7 +45,7 @@ const Campaign = () => {
   const getBillboardInfo = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/user/get-campaign`,
+        `${apibaseurl}user/get-campaign`,
         {
           campaignId : billboardId
         },
@@ -111,7 +111,7 @@ const Campaign = () => {
     }
     try {
       const body = { billboardId, x: currentCoordinates.x, y: currentCoordinates.y, action_type: currentAction.actionType, action_data: currentAction }
-      const response = await axios.post('http://localhost:5000/user/save-action', body, { withCredentials: true });
+      const response = await axios.post(`${apibaseurl}user/save-action`, body, { withCredentials: true });
       if (response.status === 201) {
         setActions((prev) => [...prev, { ...currentAction, actionId: response.data.actionId }]);
         setcurrentAction({

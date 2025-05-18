@@ -1,6 +1,7 @@
 import React, { Profiler, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
+import apibaseurl from '../../apiConfig/api';
 import axios from "axios";
 
 const Dashboard = () => {
@@ -11,7 +12,7 @@ const Dashboard = () => {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/user/`,
+        `${apibaseurl}user/`,
         {
           withCredentials: true,
         }
@@ -28,7 +29,7 @@ const Dashboard = () => {
   const getBillboardInfo = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/user/getCampaigns`,
+        `${apibaseurl}user/getCampaigns`,
         {
           withCredentials: true,
         }
@@ -75,7 +76,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-3 gap-16">
 
           {/* TOOLS */}
-          <div className="bg-white rounded-lg shadow-lg  p-2">
+          <div className="bg-white rounded-lg shadow-lg  p-2 h-fit">
             <div className="p-4">
               {/* Create Banner Section */}
               <div className="bg-white rounded-lg shadow-lg p-4 items-start mb-4">
@@ -131,7 +132,7 @@ const Dashboard = () => {
           </div>
 
           {/* Statistics */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
+          <div className="bg-white rounded-lg shadow-lg p-4 h-fit">
             <h2 className="text-2xl mb-4">Statistics</h2>
             <ul className="space-y-4 p-0">
               <li className="flex items-center bg-gray-100 rounded-2xl p-4 border-2 border-gray-200">

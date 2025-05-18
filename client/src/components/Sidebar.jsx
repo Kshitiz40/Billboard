@@ -31,7 +31,7 @@ const Sidebar = () => {
           <div className="w-24 h-24 text-white flex items-center justify-center font-bold">
             <img
               className="w-24 h-24"
-              src='/logo2.jpg'
+              src='/logo.jpeg'
               alt="LOGO"
             />
           </div>

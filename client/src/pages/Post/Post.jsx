@@ -7,17 +7,19 @@ import axios from "axios";
 import { useNotification } from "../../context/NotificationContext";
 import CodeOffIcon from '@mui/icons-material/CodeOff';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useNavigate } from "react-router-dom";
 
 const Post = () => {
     const [images, setImages] = useState([]);
     const { showNotification } = useNotification();
     const [selectedEmbedCode, setSelectedEmbedCode] = useState("");
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/user/getCampaigns`,{withCredentials : true});
+                const response = await axios.get(`${apibaseurl}user/getCampaigns`,{withCredentials : true});
                 if (response.status === 200) {
                     // setImages(response.data);
                     setImages(response.data.campaigns)
@@ -30,7 +32,7 @@ const Post = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:5000/user/delete-billboard/${id}`,{withCredentials : true});
+            const response = await axios.delete(`${apibaseurl}user/delete-billboard/${id}`,{withCredentials : true});
             if (response.status === 200) {
                 setImages(images.filter((image) => image.id !== id));
                 showNotification("Image deleted successfully");
@@ -75,6 +77,7 @@ const Post = () => {
                                 src={item.final_image}
                                 alt={`Saved Image ${index + 1}`}
                                 className="w-full h-44 object-cover"
+                                onClick= {() => navigate('/campaign', {state : {billboardId : item.id}})}
                             />
                             <div className="p-4">
                                 <h2 className="text-lg font-semibold text-gray-800 truncate">{item.title}</h2>

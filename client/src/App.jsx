@@ -10,12 +10,12 @@ import GetStarted from "./pages/getStarted/GetStarted";
 import UploadImage from "./pages/UploadImage/UploadImage";
 import { NotificationProvider } from "./context/NotificationContext";
 import Error from "./components/Error";
-import FabricCanvas from "./components/CanvasArea";
-import DrawingBoard from "./pages/Draw/DrawingBoard";
-import Edit from "./pages/Edit/Edit";
+// import FabricCanvas from "./components/CanvasArea";
+// import DrawingBoard from "./pages/Draw/DrawingBoard";
+// import Edit from "./pages/Edit/Edit";
 import Post from "./pages/Post/Post";
 import Campaign from "./pages/Campaign/Campaign";
-
+import BannerCreator from "./pages/BannerCreator/BannerCreator";
 
 
 const App = () => {
@@ -41,11 +41,12 @@ const App = () => {
           <Route path="/" element={<GetStarted />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/canvas" element={<FabricCanvas />} />
-          <Route path="/draw" element={<DrawingBoard />} />
-          <Route path="/edit" element={<Edit />} />
+          {/* <Route path="/canvas" element={<FabricCanvas />} /> */}
+          {/* <Route path="/draw" element={<DrawingBoard />} /> */}
+          {/* <Route path="/edit" element={<Edit />} /> */}
           <Route path="/post" element={<Post />} />
           <Route path="/campaign" element={<Campaign />} />
+          <Route path="/create" element={<BannerCreator />} />
         </Routes>
       </NotificationProvider>
     </>

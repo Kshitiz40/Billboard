@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import apibaseurl from '../../apiConfig/api';
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ const SignUp = () => {
     if (name && email && mobileNumber && password) {
       try{
         const response = await axios.post(
-          `http://localhost:5000/user/register`,
+          `${apibaseurl}user/register`,
           {name,email,mobile_number : mobileNumber,password},
           {
             withCredentials : true,

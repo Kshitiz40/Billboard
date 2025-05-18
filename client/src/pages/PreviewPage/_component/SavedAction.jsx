@@ -7,6 +7,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
 import { useNotification } from "../../../context/NotificationContext";
+import apibaseurl from "../../../apiConfig/api";
 
 const ActionIcons = {
     whatsapp: <WhatsAppIcon style={{ color: "#25D366" }} />,
@@ -24,7 +25,7 @@ const SavedAction = ({ actions, setSelectedItem, billboardId, handleDeleteAction
     //    Api Call to delete the action
     const handleDelete = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:5000/user/delete-action/${id}/${billboardId}`,{withCredentials:true});
+            const response = await axios.delete(`${apibaseurl}user/delete-action/${id}/${billboardId}`,{withCredentials:true});
             if (response.status === 200) {
                 const updatedActions = actionData.filter((action) => action.actionId !== id);
                 setactionData(updatedActions);

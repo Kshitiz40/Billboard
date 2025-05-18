@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const FileUploader = ({ onFileChange, label }) => {
+const FileUploader = ({ onFileChange, label, bannerUploaded }) => {
     const [isImageUploaded, setIsImageUploaded] = useState(false);
     const [uploadedFileName, setUploadedFileName] = useState("");
 
@@ -27,10 +27,10 @@ const FileUploader = ({ onFileChange, label }) => {
                     onChange={(e) => handleFileChange(e.target.files[0])}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                <div className={` ${ isImageUploaded ? "bg-blue-500 " : " bg-white"} flex items-center justify-center w-full h-14 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200`}>
-                    <span className={`text-sm font-medium ${ isImageUploaded ? " text-white" : " text-gray-600"} `} >
-                        {isImageUploaded
-                            ? `Uploaded: ${uploadedFileName}`
+                <div className={` ${ isImageUploaded ||bannerUploaded ? "bg-blue-500 " : " bg-white"} flex items-center justify-center w-full h-14 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200`}>
+                    <span className={`text-sm font-medium ${ isImageUploaded || bannerUploaded ? " text-white" : " text-gray-600"} `} >
+                        {isImageUploaded || bannerUploaded
+                            ? `Uploaded  ${uploadedFileName}`
                             : "Click to upload or drag and drop an image"}
                     </span>
                 </div>
